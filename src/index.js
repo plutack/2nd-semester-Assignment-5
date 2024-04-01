@@ -3,6 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import { connect } from "./database/connection.js";
 import authRoute from "./routes/auth_route.js";
+import postRoute from "./routes/post_route.js";
 
 // load .env file
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // routes
 app.use("/", authRoute);
+app.use("/posts", postRoute);
 
 // initialize connection to database and start express instance
 connect().then(() => {
