@@ -10,7 +10,8 @@ dotenv.config();
 
 // declare variables
 const app = express();
-const port = process.env.PORT;
+// const port = process.env.PORT;
+const hostname = process.env.CYCLIC_URL
 
 // middlewares
 app.use(express.json());
