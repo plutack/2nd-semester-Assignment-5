@@ -17,8 +17,8 @@ export const register = async (
   if (password !== confirmPassword) {
     throw new ErrorWithStatusCode("Password does not match", 400);
   }
-
- const hashedPassword = await bcrypt.hash(password, 10);
+  console.log(password);
+  const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({
     name,
     email,
