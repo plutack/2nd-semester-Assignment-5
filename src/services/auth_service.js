@@ -18,11 +18,11 @@ export const register = async (
     throw new ErrorWithStatusCode("Password does not match", 400);
   }
 
-  password = await bcrypt.hash(password, 10);
+ const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({
     name,
     email,
-    password,
+    password: hashedPassword,
     role,
   });
   console.log(newUser);
