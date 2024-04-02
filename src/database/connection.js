@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 
 // create connection instance
 export const connect = async () => {
-  const { MONGODB_URI } = process.env;
-  return await mongoose.connect(MONGODB_URI);
+  const uri = process.env.MONGODB_URI;
+  const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+  return await mongoose.connect(uri, clientOptions);
   console.error("database error", err);
 };
