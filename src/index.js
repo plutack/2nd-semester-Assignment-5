@@ -24,7 +24,7 @@ app.use("/posts", postRoute);
 
 // initialize connection to database and start express instance
 connect( uri, clientOptions ).then(() => {
-  await mongoose.connection.db.admin().command({ ping: 1 });
+  mongoose.connection.db.admin().command({ ping: 1 });
   console.log("database successfully connected");
   app.listen(port, () => console.log(`Server running on port: ${port}`));
 });
