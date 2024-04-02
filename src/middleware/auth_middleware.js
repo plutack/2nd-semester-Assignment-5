@@ -15,7 +15,8 @@ export const authMiddleware = (req, res, next) => {
       console.log(err);
       res.status(401).json({ message: "Unauthorized not correct" });
     }
+    req.user = decoded;
+    // console.log(decoded);
+    next();
   });
-
-  console.log("successful");
 };

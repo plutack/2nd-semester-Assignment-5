@@ -1,5 +1,4 @@
 import Jwt from "jsonwebtoken";
-import User from "../database/schema/user_schema.js";
 import * as authService from "../services/auth_service.js";
 import bcrypt from "bcrypt";
 
