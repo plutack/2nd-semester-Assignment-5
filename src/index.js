@@ -11,6 +11,8 @@ dotenv.config();
 // declare variables
 const app = express();
 const port = process.env.PORT;
+const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+const uri = process.env.MONGODB_URI
 // const hostname = process.env.CYCLIC_URL
 
 // middlewares
@@ -21,7 +23,8 @@ app.use("/", authRoute);
 app.use("/posts", postRoute);
 
 // initialize connection to database and start express instance
-connect().then(() => {
+connect( uri, clientOptions ).then(() => {
+  await mongoose.connection.db.admin().command({ ping: 1 });
   console.log("database successfully connected");
   app.listen(port, () => console.log(`Server running on port: ${port}`));
 });
