@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 export const register = async (req, res) => {
   try {
     const { name, email, password, confirmPassword, role } = req.body;
+    console.log(name,email, password)
     const newUser = await authService.register(
       name,
       email,
