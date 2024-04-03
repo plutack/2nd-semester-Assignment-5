@@ -20,7 +20,11 @@ app.use("/", authRoute);
 app.use("/posts", postRoute);
 
 // initialize connection to database and start express instance
-connect().then(() => {
-  console.log("database successfully connected");
-  app.listen(port, () => console.log(`Server running on port: ${port}`));
-});
+connect()
+  .then(() => {
+    console.log("database successfully connected");
+    app.listen(port, () => console.log(`Server running on port: ${port}`));
+  })
+  .catch((error) => {
+    console.error("Error connecting to the database:", error);
+  });
