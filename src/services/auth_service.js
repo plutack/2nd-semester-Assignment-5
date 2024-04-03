@@ -11,12 +11,13 @@ export const register = async (
   role,
 ) => {
   const user = await User.findOne({ email });
-  if (user) {
-    throw new ErrorWithStatusCode("user already exists", 400);
-  }
   if (password !== confirmPassword) {
     throw new ErrorWithStatusCode("Password does not match", 400);
   }
+  if (user) {
+    throw new ErrorWithStatusCode("user already exists", 400);
+  }
+  
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({
     name,
@@ -25,6 +26,7 @@ export const register = async (
     role,
   });
   await newUser.save();
+  delete newUser.password;
   return newUser;
 };
 

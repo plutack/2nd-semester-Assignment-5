@@ -19,7 +19,6 @@ export const getAllPosts = async ({
 };
 
 export const getSinglePost = async (id) => {
-  console.log(typeof id);
   const post = await Post.findById(id).populate("user", "");
   return post;
 };
@@ -33,7 +32,6 @@ export const updatePost = async (id, updateField) => {
 };
 
 export const deletePost = async (id) => {
-  console.log(typeof id);
   const post = await Post.findByIdAndDelete(id).populate("user", "");
   return post;
 };
