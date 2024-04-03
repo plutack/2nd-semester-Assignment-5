@@ -5,8 +5,6 @@ import bcrypt from "bcrypt";
 export const register = async (req, res) => {
   try {
     const { name, email, password, confirmPassword, role } = req.body;
-    console.log(name,email, password);
-    console.log("body", req.body);
     const newUser = await authService.register(
       name,
       email,
@@ -19,6 +17,10 @@ export const register = async (req, res) => {
       data: newUser,
     });
   } catch (err) {
+    if (err.name === "ValidationError") {
+      const errors = Object.values(err.errors).map((error) => error.message);
+      return res.status(400).json({ message: "Validation error", errors });
+    }
     res.status(err.statusCode || 500).json({ message: err.message });
   }
 };

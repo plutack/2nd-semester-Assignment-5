@@ -21,7 +21,6 @@ export const getAllPosts = async ({
 export const getSinglePost = async (id) => {
   console.log(typeof id);
   const post = await Post.findById(id).populate("user", "");
-  console.log(post);
   return post;
 };
 
@@ -30,14 +29,12 @@ export const updatePost = async (id, updateField) => {
     "user",
     "",
   );
-  console.log(post);
   return post;
 };
 
 export const deletePost = async (id) => {
   console.log(typeof id);
   const post = await Post.findByIdAndDelete(id).populate("user", "");
-  console.log(post);
   return post;
 };
 
@@ -48,6 +45,5 @@ export const createPost = async (title, body, user) => {
     user,
   });
   await newPost.save();
-  console.log(newPost);
   return newPost;
 };

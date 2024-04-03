@@ -1,6 +1,6 @@
 import Jwt from "jsonwebtoken";
 import User from "../database/schema/user_schema.js";
-import bcrypt, { compareSync } from "bcrypt";
+import bcrypt from "bcrypt";
 import { ErrorWithStatusCode } from "../exceptions/customErrorConstructor.js";
 
 export const register = async (
@@ -17,7 +17,6 @@ export const register = async (
   if (password !== confirmPassword) {
     throw new ErrorWithStatusCode("Password does not match", 400);
   }
-  console.log(password);
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({
     name,
@@ -25,7 +24,6 @@ export const register = async (
     password: hashedPassword,
     role,
   });
-  console.log(newUser);
   await newUser.save();
   return newUser;
 };
@@ -43,9 +41,9 @@ export const login = async (email, password) => {
       _id: user._id,
     },
     JWTSecret,
-    // {
-    //   expiresIn: "5m",
-    // },
+    {
+      expiresIn: "20m",
+    },
   );
   return {
     accessToken,
