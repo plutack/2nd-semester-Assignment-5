@@ -44,6 +44,6 @@ export const createPost = async (title, body, user) => {
     user,
   });
   await newPost.save();
-  await newPost.populate("user").execPopulate();
+  await newPost.populate("user", "");
   return newPost;
 };
