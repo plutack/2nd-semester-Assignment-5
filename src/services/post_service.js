@@ -37,6 +37,7 @@ export const deletePost = async (id) => {
 };
 
 export const createPost = async (title, body, user) => {
+  console.log(user);
   const newPost = new Post({
     title,
     body,
