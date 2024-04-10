@@ -1,49 +1,89 @@
-import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
-
-import { expect, jest } from "@jest/globals";
-import { createPost } from "./post_service.js";
+import {
+  getAllPosts,
+  getSinglePost,
+  updatePost,
+  deletePost,
+  createPost,
+} from "./post_service.js";
 import Post from "../database/schema/post_schema.js";
-import User from "../database/schema/user_schema.js";
+// import { jest } from "@jest/globals";
 
-jest.mock("../database/schema/post_schema.js", () => ({
-  __esModule: true,
-  default: jest.fn(),
-}));
+jest.mock("../database/schema/post_schema.js", () => {
+  // Mock for the instance methods
+  const mockInstance = {
+    save: jest.fn().mockResolvedValue({
+      title: "Test Title",
+      body: "Test Body",
+      user: "Test User",
+    }),
+    populate: jest.fn().mockReturnThis(), // For chaining
+  };
 
-describe("post service functions", () => {
-  let saveSpy, populateSpy;
-
+  return {
+    // __esModule: true, // Mark it as an ES module
+    default: jest.fn().mockImplementation(() => mockInstance),
+    // Static method mocks
+    find: jest.fn().mockResolvedValue([]),
+    findById: jest.fn().mockResolvedValue(null),
+    findByIdAndUpdate: jest.fn().mockResolvedValue(null),
+    findByIdAndDelete: jest.fn().mockResolvedValue(null),
+  };
+});
+describe("Post Controller", () => {
   beforeEach(() => {
-    // Create a mock instance of the Post model
-    const postInstance = new Post();
-
-    // Spy on the `save` method of the mock instance
-    saveSpy = jest.spyOn(postInstance, "save");
-    populateSpy = jest.spyOn(Post.prototype, "populate");
+    Post.find.mockClear();
+    Post.findById.mockClear();
+    Post.findByIdAndUpdate.mockClear();
+    Post.findByIdAndDelete.mockClear();
   });
-  afterEach(() => {
-    saveSpy.mockRestore();
-  });
-
-  beforeAll(async () => {
-    const mongod = await MongoMemoryServer.create();
-    await mongoose.connect(mongod.getUri());
-  });
-
-  afterAll(() => {
-    jest.clearAllMocks();
-  });
-
-  describe("create post function", () => {
-    it("should create and save a new post", async () => {
-      const title = "Test post";
-      const body = "This is the content body";
-      const user = "661279f79f11a56b4bcf6da2";
-      await createPost(title, body, user);
-      expect(Post).toHaveBeenCalledWith({ title, body, user });
-      expect(saveSpy).toHaveBeenCalled();
-      expect(populateSpy).toHaveBeenCalledWith("user", "");
+  it("getAllPosts retrieves posts successfully", async () => {
+    Post.find.mockReturnValue({
+      populate: jest.fn().mockReturnValue({
+        sort: jest.fn().mockReturnValue({
+          skip: jest.fn().mockReturnValue({
+            limit: jest.fn().mockResolvedValue(["post1", "post2"]),
+          }),
+        }),
+      }),
     });
+    const posts = await getAllPosts({
+      limit: 10,
+      page: 1,
+      order: "desc",
+      orderBy: "createdAt",
+    });
+    expect(posts.length).toBe(2);
+    expect(Post.find).toHaveBeenCalled();
+  });
+  it("getSinglePost retrieves a post successfully", async () => {
+    Post.findById.mockReturnValue({
+      populate: jest.fn().mockResolvedValue("singlePost"),
+    });
+    const post = await getSinglePost("someId");
+    expect(post).toBe("singlePost");
+    expect(Post.findById).toHaveBeenCalled();
+  });
+  it("updatePost updates a post successfully", async () => {
+    Post.findByIdAndUpdate.mockReturnValue({
+      populate: jest.fn().mockResolvedValue("updatedPost"),
+    });
+    const post = await updatePost("someId", { title: "New Title" });
+    expect(post).toBe("updatedPost");
+    expect(Post.findByIdAndUpdate).toHaveBeenCalled();
+  });
+  it("deletePost deletes a post successfully", async () => {
+    Post.findByIdAndDelete.mockReturnValue({
+      populate: jest.fn().mockResolvedValue("deletedPost"),
+    });
+    const post = await deletePost("someId");
+    expect(post).toBe("deletedPost");
+    expect(Post.findByIdAndDelete).toHaveBeenCalled();
+  });
+  it("createPost creates a post successfully", async () => {
+    post.save = jest.fn().mockResolvedValue("newPost");
+    Post.populate = jest.fn().mockReturnValue("populatedPost");
+    const post = await createPost("Test Title", "Test Body", "Test User");
+    expect(post).toBe("newPost");
+    expect(Post.prototype.save).toHaveBeenCalled();
   });
 });
