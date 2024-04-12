@@ -6,29 +6,43 @@ import {
   createPost,
 } from "./post_service.js";
 import Post from "../database/schema/post_schema.js";
+import mongoose from "mongoose";
 // import { jest } from "@jest/globals";
 
 jest.mock("../database/schema/post_schema.js", () => {
   // Mock for the instance methods
-  const mockInstance = {
-    save: jest.fn().mockResolvedValue({
-      title: "Test Title",
-      body: "Test Body",
-      user: "Test User",
-    }),
-    populate: jest.fn().mockReturnThis(), // For chaining
-  };
+  // const mockInstance = {
+  //   mongoose.model.save: jest.fn().mockResolvedValue({
+  //     title: "Test Title",
+  //     body: "Test Body",
+  //     user: "Test User",
+  //   }),
+  //   populate: jest.fn().mockReturnThis(), // For chaining
+  // };
 
   return {
-    // __esModule: true, // Mark it as an ES module
-    default: jest.fn().mockImplementation(() => mockInstance),
-    // Static method mocks
     find: jest.fn().mockResolvedValue([]),
     findById: jest.fn().mockResolvedValue(null),
     findByIdAndUpdate: jest.fn().mockResolvedValue(null),
     findByIdAndDelete: jest.fn().mockResolvedValue(null),
   };
 });
+
+jest.mock("mongoose.model", () => {
+{
+  __esModule: true, // This is important for mocking ES modules
+  default: jest.fn().mockImplementation(() => ({
+    save: jest.fn().mockImplementation(function() {
+      // Optionally customize the resolved value to simulate your use case
+      return Promise.resolve(this);
+    }),
+    populate: jest.fn().mockImplementation(function() {
+      // Adjust the mock to simulate your specific population logic
+      // For example, adding a mocked user object
+      this.user = { name: 'Mocked User Name', _id: 'mockedUserId' };
+      return Promise.resolve(this);
+    }});
+
 describe("Post Controller", () => {
   beforeEach(() => {
     Post.find.mockClear();
@@ -80,10 +94,10 @@ describe("Post Controller", () => {
     expect(Post.findByIdAndDelete).toHaveBeenCalled();
   });
   it("createPost creates a post successfully", async () => {
-    post.save = jest.fn().mockResolvedValue("newPost");
-    Post.populate = jest.fn().mockReturnValue("populatedPost");
+    // mongoose.model.save = jest.fn().mockResolvedValue("newPost");
+    // Post.populate = jest.fn().mockReturnValue("populatedPost");
     const post = await createPost("Test Title", "Test Body", "Test User");
     expect(post).toBe("newPost");
-    expect(Post.prototype.save).toHaveBeenCalled();
+    expect(post.prototype.save).toHaveBeenCalled();
   });
 });
