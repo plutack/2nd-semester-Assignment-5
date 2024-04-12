@@ -1,4 +1,4 @@
-// import neccessary modules
+// import necessary modules
 import express from "express";
 import dotenv from "dotenv";
 import { connect } from "./database/connection.js";

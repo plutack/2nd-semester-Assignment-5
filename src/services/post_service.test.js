@@ -1,3 +1,4 @@
+// import necessary modules
 import {
   getAllPosts,
   getSinglePost,
@@ -6,7 +7,6 @@ import {
   createPost,
 } from "./post_service.js";
 import Post from "../database/schema/post_schema.js";
-import mongoose from "mongoose";
 // import { jest } from "@jest/globals";
 
 jest.mock("../database/schema/post_schema.js", () => {

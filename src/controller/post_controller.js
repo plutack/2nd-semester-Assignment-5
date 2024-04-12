@@ -1,6 +1,7 @@
+// import necessary modules
 import * as postService from "../services/post_service.js";
-// import Post from "../database/schema/post_schema.js";
 
+// create function to handle creating posts /posts route
 export const createPost = async (req, res) => {
   try {
     const user = req.user;
@@ -11,6 +12,7 @@ export const createPost = async (req, res) => {
       data,
     });
   } catch (err) {
+    // handle validation errrors seperately
     if (err.name === "ValidationError") {
       const errors = Object.values(err.errors).map((error) => error.message);
       return res.status(400).json({ message: "Validation error", errors });
@@ -19,16 +21,19 @@ export const createPost = async (req, res) => {
   }
 };
 
+// create function to handle updating posts /posts route
 export const updatePost = async (req, res) => {
   try {
     let data;
     const id = req.params.id;
     const { title, body } = req.body;
+    // handling missing payload by validating the payload
     if (!title && !body) {
       return res
         .status(400)
         .json({ message: "Either title or body must be provided" });
     }
+    // only one can be changed according to specifications
     if (title) {
       data = await postService.updatePost(id, { title });
     }
@@ -40,6 +45,7 @@ export const updatePost = async (req, res) => {
       data,
     });
   } catch (err) {
+    // handle validation errors seperately
     if (err.name === "ValidationError") {
       const errors = Object.values(err.errors).map((error) => error.message);
       return res.status(400).json({ message: "Validation error", errors });
@@ -48,6 +54,7 @@ export const updatePost = async (req, res) => {
   }
 };
 
+// create function to handle delete post on /posts route
 export const deletePost = async (req, res) => {
   try {
     const id = req.params.id;
@@ -62,6 +69,7 @@ export const deletePost = async (req, res) => {
   }
 };
 
+// create function to handle get all posts on /posts route
 export const getAllPosts = async (req, res) => {
   try {
     const {
@@ -81,6 +89,7 @@ export const getAllPosts = async (req, res) => {
   }
 };
 
+// create function to handle get a single post on /posts route
 export const getSinglePost = async (req, res) => {
   try {
     const id = req.params.id;

@@ -1,5 +1,7 @@
+// import necessary modules
 import mongoose from "mongoose";
 
+// define user schema
 const userSchema = mongoose.Schema(
   {
     name: {
@@ -30,6 +32,8 @@ const userSchema = mongoose.Schema(
   },
 );
 
+// properly format how user details is returned to the user
+// transform with 3 dot operator is used to rearrange as required by specification of returned response
 userSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
@@ -44,6 +48,7 @@ userSchema.set("toJSON", {
   },
 });
 
+// initialize model from schema
 const User = mongoose.model("User", userSchema);
 
 export default User;

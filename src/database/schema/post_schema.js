@@ -1,5 +1,7 @@
+// import necessary modules
 import mongoose from "mongoose";
 
+// create schema for post
 const postSchema = mongoose.Schema(
   {
     title: {
@@ -21,6 +23,8 @@ const postSchema = mongoose.Schema(
   },
 );
 
+// properly format how post details is returned to the user
+// transform with 3 dot operator is used to rearrange as required by specification of returned response
 postSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
@@ -33,6 +37,7 @@ postSchema.set("toJSON", {
   },
 });
 
+// initailize model from defined schema
 const Post = mongoose.model("Post", postSchema);
 
 export default Post;

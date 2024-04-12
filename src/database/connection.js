@@ -1,7 +1,11 @@
-// import neccessary modules
+// import necessary modules
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-// create connection instance
+//load secrets from .env file
+dotenv.config(); // dotenv package is no longer neccesary in newer version of node
+
+// create connection instance to cloud mongoDB instance as described by documentation
 export const connect = async () => {
   const uri = process.env.MONGODB_URI;
   const clientOptions = {

@@ -1,6 +1,6 @@
+// import necessary modules
 import Jwt from "jsonwebtoken";
-import { ErrorWithStatusCode } from "../exceptions/customErrorConstructor.js";
-
+// create middleware to intercept traffic for protected routes
 export const authMiddleware = (req, res, next) => {
   const authorization = req.headers.authorization;
   if (!authorization) {

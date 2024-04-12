@@ -1,3 +1,4 @@
+// import necessary modules
 import Post from "../database/schema/post_schema.js";
 
 export const getAllPosts = async ({

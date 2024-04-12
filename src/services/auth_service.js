@@ -1,3 +1,4 @@
+// import necessary modules
 import Jwt from "jsonwebtoken";
 import User from "../database/schema/user_schema.js";
 import bcrypt from "bcrypt";
@@ -17,7 +18,7 @@ export const register = async (
   if (user) {
     throw new ErrorWithStatusCode("user already exists", 400);
   }
-  
+
   const hashedPassword = await bcrypt.hash(password, 10);
   const newUser = new User({
     name,
